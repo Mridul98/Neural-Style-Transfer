@@ -7,7 +7,7 @@
 ### style image
 ![style image](style.jpg "image to be styled with")
 
-### result image
+### Image transformation from noise to the output
 
 ![final output image](friends.gif "image to be styled with")
 
@@ -21,5 +21,5 @@
     4. Run this command to generate final output:
         
         python3 nst.py
-        
+
     5. A gif will be generated named 'output.gif'
