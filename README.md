@@ -6,3 +6,7 @@
 
 ### style image
 ![style image](style.jpg "image to be styled with")
+
+### result image
+
+![final output image](friends.gif "image to be styled with")
