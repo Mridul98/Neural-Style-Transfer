@@ -16,6 +16,7 @@
     1. First install the required package using the command:
         
         pip3 install -r 'requirements.txt'
+        
     2. Add your style image in the root directory as 'style.jpg'
     3. Add your content image in the root directory as 'content.jpg'
     4. Run this command to generate final output:
