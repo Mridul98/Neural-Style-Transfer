@@ -125,6 +125,7 @@ class CNNModel(ABC):
     @model.setter
     @abstractmethod
     def model(self,pretrained_model:torch.nn.Module):
+        """subclass must implement this setter method of model"""
         pass
 
 
