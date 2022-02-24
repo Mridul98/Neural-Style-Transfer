@@ -18,8 +18,8 @@ class Vgg19FeatureExtractor(FeatureExtractor):
         """_summary_
 
         Args:
-            img_tensor (torch.Tensor): _description_
-            pretrained_model (torch.nn.Module): _description_
+            img_tensor (torch.Tensor): image for which the features to be extracted
+            pretrained_model (torch.nn.Module): modified VGG19 model
         """
         super(Vgg19FeatureExtractor,self).__init__(img_tensor=img_tensor,pretrained_model=pretrained_model)
 
