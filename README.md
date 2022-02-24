@@ -23,3 +23,5 @@
         python3 nst.py
 
     5. A gif will be generated named 'output.gif'
+
+### Note: The production version of this project is under development which can be found in backend/ directory
