@@ -35,7 +35,7 @@ class NST:
             content_weight (float): amount of weight on content loss
             style_weight (float): amount of weight on style loss
             epoch (int): number of epochs to train the NST
-            cnn_model (inter)
+            cnn_model (CNNModel): CNN model to be used for neural style transfer
         """
 
         self.__epoch = epoch
@@ -217,7 +217,9 @@ class NST:
             )
 
             total_loss = content_loss + style_loss
+
             print(f"{i}'th epoch, loss: {total_loss}")
+
             total_loss.backward(retain_graph = True)
             optimizer.step()
 
