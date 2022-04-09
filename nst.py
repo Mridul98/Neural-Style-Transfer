@@ -156,6 +156,6 @@ del style_features[4]
 
 if __name__ == '__main__':
 
-  train(200,1e4,1e2)
+  train(600,1e4,1e2)
   appendImage(600,5)
   make_gif(imageList,'output')
