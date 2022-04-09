@@ -9,7 +9,7 @@
 
 ### Image transformation from noise to the output
 
-![final output image](friends.gif "image to be styled with")
+![final output image](output.gif "image to be styled with")
 
 ### How to run
 
