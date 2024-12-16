@@ -1,3 +1,5 @@
 nst_venv/
 seq*.jpg
 backend/results/*.jpg
+minio_data/*
+!minio_data/.gitkeep
