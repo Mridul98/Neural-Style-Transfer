@@ -16,7 +16,6 @@ async def get_storage_service():
         StorageService: object that is 
         responsible for interacting with storage service
     """
-
     yield LocalStorageService('./storage_dir')
 
 async def is_jpeg(file:UploadFile):
@@ -29,7 +28,6 @@ async def is_jpeg(file:UploadFile):
     Returns:
         boolean: returns True if the file is an image type of jpeg else False
     """
-
     return True if file.content_type=='image/jpeg' else False
 
 
