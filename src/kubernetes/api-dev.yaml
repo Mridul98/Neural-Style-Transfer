@@ -1,0 +1,47 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: api-dev
+  labels:
+    name: api-dev
+
+--- 
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: api-dev
+  name: nst-api-deployment
+  labels:
+    app.kubernetes.io/name: nst-api
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nst-api
+  template:
+    metadata:
+      labels:
+        app: nst-api
+    spec:
+      containers:
+      - name: nst-api
+        image: nst_api
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8888
+
+--- 
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: nst-api
+  name: nst-api-deployment
+  namespace: api-dev
+spec:
+  ports:
+  - port: 8888
+    protocol: TCP
+    targetPort: 8888
+  selector:
+    app: nst-api

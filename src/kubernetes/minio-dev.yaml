@@ -1,0 +1,64 @@
+# Deploys a new Namespace for the MinIO Pod
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: minio-dev # Change this value if you want a different namespace name
+  labels:
+    name: minio-dev # Change this value to match metadata.name
+--- 
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: minio-dev
+  name: minio-deployment
+  labels:
+    app.kubernetes.io/name: minio
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: minio
+  template:
+    metadata:
+      labels:
+        app: minio
+    spec:
+      containers:
+      - name: minio
+        image: quay.io/minio/minio:latest
+        command:
+        - /bin/bash
+        - -c
+        args: 
+        - minio server /data --console-address :9090
+        ports:
+        - containerPort: 9090
+        volumeMounts:
+        - mountPath: /data
+          name: minio-data # Corresponds to the `spec.volumes` Persistent Volume
+      nodeSelector:
+        kubernetes.io/hostname: docker-desktop # Specify a node label associated to the Worker Node on which you want to deploy the pod.
+      volumes:
+      - name: minio-data
+        hostPath: # MinIO generally recommends using locally-attached volumes
+          path: /run/desktop/mnt/host/e/minio_data # Specify a path to a local drive or volume on the Kubernetes worker node
+          type: DirectoryOrCreate # The path to the last directory must exist
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app.kubernetes.io/name: minio
+  name: minio-deployment
+  namespace: minio-dev
+spec:
+  ports:
+  - port: 9090
+    protocol: TCP
+    targetPort: 9090
+  selector:
+    app: minio
+
