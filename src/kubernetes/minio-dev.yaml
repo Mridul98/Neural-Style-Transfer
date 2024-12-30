@@ -34,6 +34,7 @@ spec:
         - minio server /data --console-address :9090
         ports:
         - containerPort: 9090
+        - containerPort: 9000
         volumeMounts:
         - mountPath: /data
           name: minio-data # Corresponds to the `spec.volumes` Persistent Volume
@@ -57,8 +58,13 @@ metadata:
 spec:
   ports:
   - port: 9090
+    name: ui
     protocol: TCP
     targetPort: 9090
+  - port: 9000
+    name: api
+    protocol: TCP
+    targetPort: 9000
   selector:
     app: minio
 
