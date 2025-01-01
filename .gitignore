@@ -4,3 +4,4 @@ backend/results/*.jpg
 minio_data/*
 !minio_data/.gitkeep
 nst_api/
+__pycache__/
