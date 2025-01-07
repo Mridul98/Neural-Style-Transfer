@@ -5,8 +5,6 @@ from abc import ABC, abstractmethod
 from minio import Minio
 from fastapi import UploadFile
 
-
-
 class StorageService(ABC):
 
     @abstractmethod
