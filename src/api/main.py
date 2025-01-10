@@ -24,8 +24,8 @@ async def submit_work(
         )
     else:
         try:
-            storage_service.upload_file(style_image)
-            storage_service.upload_file(content_image)
+            storage_service.upload_file(file=style_image)
+            storage_service.upload_file(file=content_image)
         except Exception as e:
             traceback.print_exc()
             raise HTTPException(

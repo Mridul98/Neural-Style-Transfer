@@ -1,5 +1,6 @@
 import config
-from models import ServiceRegistry, UploadFile
+from services import MinioStorageService
+from models import UploadFile
 
 async def get_storage_service():
     """yield an object for interacting 
@@ -11,7 +12,12 @@ async def get_storage_service():
     """
     match config.STORAGE_TYPE:
         case "minio":
-            yield ServiceRegistry.minio
+            yield MinioStorageService(
+                host=config.MINIO_HOST,
+                access_key=config.MINIO_ACCESS_KEY,
+                secret_key=config.MINIO_SECRET_KEY,
+                bucket_name=config.MINIO_BUCKET_NAME
+            )
         case _:
             raise NotImplementedError("storage type not implemented")
 
