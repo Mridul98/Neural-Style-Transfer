@@ -11,9 +11,4 @@ class UploadFileModel(BaseModel):
 
 @dataclass()
 class ServiceRegistry:
-    minio = MinioStorageService(
-        host=config.MINIO_HOST,
-        access_key=config.MINIO_ACCESS_KEY,
-        secret_key=config.MINIO_SECRET_KEY,
-        bucket_name=config.MINIO_BUCKET_NAME
-    )
+    minio = MinioStorageService 
