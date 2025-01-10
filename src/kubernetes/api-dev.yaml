@@ -5,6 +5,20 @@ metadata:
   labels:
     name: api-dev
 
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: minio-creds
+  namespace: api-dev
+type: Opaque
+stringData:
+  storage_type: minio
+  minio_host: minio-deployment.minio-dev.svc.cluster.local:9000
+  minio_access_key: B8l42QhLpcgoAE8eWg5W
+  minio_secret_key: NkjBqwBzXfuXZbit6C3ZKrszWYD8BSFyhkEz0zD9
+  minio_bucket_name: nst-bucket
+
 --- 
 apiVersion: apps/v1
 kind: Deployment
@@ -29,8 +43,33 @@ spec:
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8888
-
-
+        env:
+        - name: STORAGE_TYPE
+          valueFrom:
+            secretKeyRef:
+              name: minio-creds
+              key: storage_type
+        - name: MINIO_HOST 
+          valueFrom:
+            secretKeyRef:
+              name: minio-creds
+              key: minio_host
+        - name: MINIO_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-creds
+              key: minio_access_key
+        - name: MINIO_SECRET_KEY    
+          valueFrom:
+            secretKeyRef:
+              name: minio-creds
+              key: minio_secret_key
+        - name: MINIO_BUCKET_NAME
+          valueFrom:
+            secretKeyRef:
+              name: minio-creds
+              key: minio_bucket_name
+              
 --- 
 apiVersion: v1
 kind: Service
