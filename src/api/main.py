@@ -1,6 +1,8 @@
 
 import traceback
-from utils import get_storage_service, is_jpeg
+from confluent_kafka import Producer
+from processor import HTTPRequestProcessor
+from utils import get_storage_service, get_kafka_producer, is_jpeg
 from fastapi import FastAPI, Depends, File, UploadFile, status, HTTPException, Response,Request
 from services import StorageService
 from typing import List
@@ -11,7 +13,8 @@ app = FastAPI()
 async def submit_work(
     style_image: UploadFile= File(...),
     content_image: UploadFile = File(...), 
-    storage_service: StorageService = Depends(get_storage_service)
+    storage_service: StorageService = Depends(get_storage_service),
+    kafka_producer: Producer = Depends(get_kafka_producer)
     ):
     
     is_jpeg_style = await is_jpeg(style_image)
@@ -24,8 +27,12 @@ async def submit_work(
         )
     else:
         try:
-            storage_service.upload_file(file=style_image)
-            storage_service.upload_file(file=content_image)
+            HTTPRequestProcessor(
+                style_image=style_image,
+                content_image=content_image,
+                storage_service=storage_service,
+                kafka_producer=kafka_producer
+            ).process()
         except Exception as e:
             traceback.print_exc()
             raise HTTPException(

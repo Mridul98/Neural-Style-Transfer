@@ -1,4 +1,5 @@
 import config
+from confluent_kafka import Producer
 from services import MinioStorageService
 from models import UploadFile
 
@@ -20,6 +21,14 @@ async def get_storage_service():
             )
         case _:
             raise NotImplementedError("storage type not implemented")
+
+async def get_kafka_producer():
+    """yield an object for interacting with kafka producer
+
+    Yields:
+        Producer: object that is responsible for producing messages to kafka
+    """
+    yield Producer({'bootstrap.servers': '192.168.65.3:32486'})
 
 async def is_jpeg(file:UploadFile):
     """check whether uploaded file is an image

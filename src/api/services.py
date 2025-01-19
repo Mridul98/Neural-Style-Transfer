@@ -54,16 +54,17 @@ class MinioStorageService(StorageService):
                 logging.error(f'file does not exists or theres an error getting the file {object_name}')
         return response
      
-    def upload_file(self,file: UploadFile):
-        logging.info(f'uploading file: {file.filename}')
+    def upload_file(self,file: UploadFile,prefix:str=None):
+        prefixed_filename = f'{prefix if prefix else ""}/{file.filename}'
+        logging.info(f'uploading file: {prefixed_filename}')
         try:
             self.client_instance.put_object(
                 bucket_name=self.bucket_name,
-                object_name=file.filename,
+                object_name=prefixed_filename,
                 data=file.file,
                 length=-1,
                 part_size=10*1024*1024
             )
         finally:
-            logging.info(f'uploading file: {file.filename} succeeded')
+            logging.info(f'uploading file: {prefixed_filename} succeeded')
 
