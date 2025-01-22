@@ -69,6 +69,8 @@ spec:
             secretKeyRef:
               name: minio-creds
               key: minio_bucket_name
+        - name: KAFKA_TOPIC
+          value: nst
               
 --- 
 apiVersion: v1

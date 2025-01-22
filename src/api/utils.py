@@ -1,7 +1,7 @@
 import config
 from confluent_kafka import Producer
 from services import MinioStorageService
-from models import UploadFile
+from datastructures import UploadFile
 
 async def get_storage_service():
     """yield an object for interacting 

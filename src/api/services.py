@@ -1,19 +1,8 @@
-import os
-import shutil
 import logging
-from abc import ABC, abstractmethod
+from io import BytesIO
 from minio import Minio
 from fastapi import UploadFile
-
-class StorageService(ABC):
-
-    @abstractmethod
-    def get_file():
-        raise NotImplementedError()
-    
-    @abstractmethod
-    def upload_file():
-        raise NotImplementedError()
+from datastructures import StorageService, MetadataModel
 
 class MinioStorageService(StorageService):
 
@@ -68,3 +57,18 @@ class MinioStorageService(StorageService):
         finally:
             logging.info(f'uploading file: {prefixed_filename} succeeded')
 
+    def upload_metadata(self,metadata:MetadataModel,prefix:str=None):
+        logging.info(f'uploading metadata...')
+        prefixed_filename = f'{prefix if prefix else ""}/metadata.json'
+        try:
+            self.client_instance.put_object(
+                bucket_name=self.bucket_name,
+                object_name=prefixed_filename,
+                data=BytesIO(metadata.model_dump_json().encode('utf-8')),
+                length=-1,
+                part_size=10*1024*1024,
+                content_type='application/json'
+            )
+        finally:
+            logging.info(f'uploading metadata succeeded')
+       
