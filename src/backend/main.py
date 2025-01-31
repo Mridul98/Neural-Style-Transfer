@@ -11,7 +11,15 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--nst_params_json_string', type=str, required=True, help='define parameters for Neural Style Transfer module')
     
-    arguments = json.loads(parser.parse_args().nst_params_json_string)
+    arguments = {
+        "content_image_path" : "./content.jpg",
+        "style_image_path" : "./style.jpg",
+        "content_layer_index" : 22,
+        "style_layer_index" : [(0,0.75),(5,0.5),(10,0.5),(19,0.3),(25,0.3),(34,0.3)],
+        "content_weight": 1e4,
+        "style_weight" : 1e2,
+        "epoch" : 1000
+    }
     
     style_transferer = NST(
         content_image_path=arguments['content_image_path'],

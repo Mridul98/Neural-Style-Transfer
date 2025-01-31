@@ -6,4 +6,4 @@ minio_data/*
 nst_api/
 __pycache__/
 nst_broker/*
-nst_broker_venv/*
+nst_consumer_venv/*

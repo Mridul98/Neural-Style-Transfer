@@ -1,0 +1,5 @@
+pydantic
+minio
+python-dotenv
+confluent-kafka
+tomli

@@ -4,6 +4,7 @@ from fastapi import UploadFile
 from confluent_kafka.admin import AdminClient
 from confluent_kafka import Producer
 from datastructures import UploadFileModel, MetadataModel, StorageService
+
 class HTTPRequestProcessor:
     def __init__(self, style_image: UploadFile, content_image: UploadFile, storage_service: StorageService,  kafka_producer: Producer):
         

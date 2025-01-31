@@ -1,0 +1,8 @@
+[consumer]
+"bootstrap.servers" = "192.168.65.3:32486"
+"group.id" = "nst_consumers"
+"client.id" = "hard_workers"
+"enable.auto.commit" = false 
+
+[topics]
+topic_name = "mridul"

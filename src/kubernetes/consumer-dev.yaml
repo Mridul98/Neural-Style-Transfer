@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: consumer-dev
+  labels:
+    name: consumer-dev
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: consumer-dev
+  name: nst-consumer-deployment
+  labels:
+    app.kubernetes.io/name: nst-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nst-consumer
+  template:
+    metadata:
+      labels:
+        app: nst-consumer
+    spec:
+      containers:
+      - name: nst-consumer
+        image: nst_consumer_image
+        imagePullPolicy: IfNotPresent
