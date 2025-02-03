@@ -3,3 +3,4 @@ minio
 python-dotenv
 confluent-kafka
 tomli
+pillow

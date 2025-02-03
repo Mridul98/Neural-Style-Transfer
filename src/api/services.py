@@ -64,7 +64,7 @@ class MinioStorageService(StorageService):
             self.client_instance.put_object(
                 bucket_name=self.bucket_name,
                 object_name=prefixed_filename,
-                data=BytesIO(metadata.model_dump_json().encode('utf-8')),
+                data=BytesIO(metadata.model_dump_json(indent=4).encode('utf-8')),
                 length=-1,
                 part_size=10*1024*1024,
                 content_type='application/json'

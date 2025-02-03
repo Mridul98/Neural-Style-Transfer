@@ -1,4 +1,5 @@
 import uuid
+import logging
 from config import KAFKA_TOPIC
 from fastapi import UploadFile
 from confluent_kafka.admin import AdminClient

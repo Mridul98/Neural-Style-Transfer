@@ -6,6 +6,19 @@ metadata:
     name: consumer-dev
 
 ---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: minio-creds
+  namespace: consumer-dev
+type: Opaque
+stringData:
+  minio_host: minio-deployment.minio-dev.svc.cluster.local:9000
+  minio_access_key: B8l42QhLpcgoAE8eWg5W
+  minio_secret_key: NkjBqwBzXfuXZbit6C3ZKrszWYD8BSFyhkEz0zD9
+  minio_bucket_name: nst-bucket
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -27,3 +40,24 @@ spec:
       - name: nst-consumer
         image: nst_consumer_image
         imagePullPolicy: IfNotPresent
+        env:
+        - name: MINIO_HOST
+          valueFrom:
+            secretKeyRef:
+              name: minio-creds
+              key: minio_host
+        - name: MINIO_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: minio-creds
+              key: minio_access_key
+        - name: MINIO_SECRET_KEY    
+          valueFrom:
+            secretKeyRef:
+              name: minio-creds
+              key: minio_secret_key
+        - name: MINIO_BUCKET_NAME
+          valueFrom:
+            secretKeyRef:
+              name: minio-creds
+              key: minio_bucket_name

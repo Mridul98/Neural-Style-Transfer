@@ -1,11 +1,14 @@
 
 import traceback
+import logging
 from confluent_kafka import Producer
 from processor import HTTPRequestProcessor
 from utils import get_storage_service, get_kafka_producer, is_jpeg
 from fastapi import FastAPI, Depends, File, UploadFile, status, HTTPException, Response,Request
 from services import StorageService
 from typing import List
+
+logging.basicConfig(level=logging.INFO,force=True)
 
 app = FastAPI()
 
