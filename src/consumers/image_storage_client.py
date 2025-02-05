@@ -2,6 +2,7 @@ import logging
 import json
 from PIL import Image
 from minio import Minio
+from minio.error import S3Error
 from io import BytesIO
 logging.basicConfig(level=logging.INFO,force=True)
 
@@ -27,11 +28,19 @@ class ImageStorage:
         return True
     
     def list_files(self,prefix:str=None):
-        objects = self.client_instance.list_objects(self.bucket_name,prefix=prefix)
+        try:
+            objects = self.client_instance.list_objects(self.bucket_name,prefix=prefix)
+        except S3Error as e:
+            logging.error(f'error listing files from minio. Error message: {e}')
+            return None
         return objects
     
     def get_file_stats(self,object_name:str):
-        stats = self.client_instance.stat_object(self.bucket_name,object_name)
+        try:
+            stats = self.client_instance.stat_object(self.bucket_name,object_name)
+        except S3Error as e:    
+            logging.error(f'error getting file stats {object_name}. Error message: {e}')
+            return None
         return stats.metadata
     
     def get_file(self,file_type:str, object_name:str):
@@ -44,6 +53,8 @@ class ImageStorage:
                 bucket_name=self.bucket_name, 
                 object_name=object_name
             )
+        except S3Error as e:
+            logging.error(f'error getting file {object_name} with file type {file_type}. Error message: {e}')
         finally:
             if response != None:
                 if file_type == 'json':

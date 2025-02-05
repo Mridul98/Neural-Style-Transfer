@@ -1,9 +1,14 @@
 import tomli
 import logging
+from minio.error import S3Error
 from config import MINIO_HOST, MINIO_ACCESS_KEY, MINIO_SECRET_KEY, MINIO_BUCKET_NAME
 from confluent_kafka import Consumer, KafkaException
 from image_storage_client import ImageStorage
-logging.basicConfig(level=logging.INFO,force=True)
+logging.basicConfig(
+    level=logging.INFO,
+    force=True,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s - [%(filename)s:%(lineno)d]'
+)
 
 class NSTWorker: 
     def __init__(self,config_path:str):
@@ -30,9 +35,14 @@ class NSTWorker:
         pass
 
     def get_metadata_file(self,job_id,path='metadata.json'):
-        path_prefix = f'/{job_id}/{path}'
+        path_prefix = f'{job_id}/{path}'
         logging.info(f'getting metadata for job_id {job_id}...from {path_prefix}')
         return self.image_storage_client.get_file(file_type='json',object_name=path_prefix)
+    
+    def get_image_file(self,job_id,path):
+        path_prefix = f'{job_id}/{path}.jpg'
+        logging.info(f'getting image for job_id {job_id}...from {path_prefix}')
+        return self.image_storage_client.get_file(file_type='image',object_name=path_prefix)
     
     def process(self):
         consumer = Consumer(self.consumer_config)
@@ -47,14 +57,28 @@ class NSTWorker:
                 elif msg.error():
                     logging.info("ERROR: %s".format(msg.error()))
                 else:
+                    topic = msg.topic()
+                    decoded_message_key = msg.key().decode('utf-8')
+                    decoded_message_value = msg.value().decode('utf-8')
+
                     # Extract the (optional) key and value, and logging.info.
                     logging.info("Consumed event from topic {topic}: key = {key:12} value = {value:12}".format(
-                        topic=msg.topic(), key=msg.key().decode('utf-8'), value=msg.value().decode('utf-8')))
+                        topic=topic, key=decoded_message_key, value=decoded_message_value))
                     
-                    logging.info(self.image_storage_client.get_file_stats(f"{msg.value().decode('utf-8')}/metadata.json"))
-                    
-                    metadata = self.get_metadata_file(msg.value().decode('utf-8'))
-                    logging.info(f"metadata: {metadata.keys()}")
+                    logging.info(self.image_storage_client.get_file_stats(f"{decoded_message_value}/metadata.json"))
+                    try:
+
+                        metadata = self.get_metadata_file(decoded_message_value)
+                        style_image = self.get_image_file(decoded_message_value,metadata['style_image_id'])
+                        content_image = self.get_image_file(decoded_message_value,metadata['content_image_id'])
+
+                        logging.info(f"style_image: {type(style_image)}")
+                        logging.info(f"content_image: {type(content_image)}")
+
+                    except AttributeError as e:
+                        logging.error(f"error getting data from minio {e}")
+                    except TypeError as e:
+                        logging.error(f"error getting data from minio {e}")
                     # logging.info(f"got list of objects {self.image_storage_client.list_files(msg.value().decode('utf-8'))}")
                     consumer.commit()
         except KeyboardInterrupt:
@@ -66,6 +90,3 @@ class NSTWorker:
 if __name__ == "__main__":
     worker = NSTWorker("./kafka_configs.toml")
     worker.process()
-
-
-    

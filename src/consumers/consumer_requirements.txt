@@ -4,3 +4,5 @@ python-dotenv
 confluent-kafka
 tomli
 pillow
+torch
+torchvision

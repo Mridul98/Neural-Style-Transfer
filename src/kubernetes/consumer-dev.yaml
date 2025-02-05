@@ -40,6 +40,9 @@ spec:
       - name: nst-consumer
         image: nst_consumer_image
         imagePullPolicy: IfNotPresent
+        resources:
+          limits:
+            nvidia.com/gpu: 1
         env:
         - name: MINIO_HOST
           valueFrom:
